@@ -1,0 +1,21 @@
+rootProject.name = 'omar-foobar'
+
+[ 'lib', 'plugin', 'app' ].each { String projectType ->
+    File projectTypeDir = new File( rootDir, "${ projectType }s" )
+
+    if ( projectTypeDir.exists() ) {
+        projectTypeDir.eachDirMatch( { it.endsWith( projectType ) } ) { File subprojectDir ->
+            include subprojectDir.name
+            project( ":${ subprojectDir.name }" ).projectDir = subprojectDir
+        }
+    }
+}
+
+if ( System.getenv( 'O2_INLINE_BUILD' ) ) {
+    def modules = [
+    ]
+
+    modules?.each { module ->
+        includeBuild  "${rootProject.projectDir.parent}/${module}"
+    }
+}    
