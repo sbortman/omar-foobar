@@ -7,6 +7,8 @@ buildscript {
         classpath "org.grails.plugins:hibernate5:${hibernate5Version}"
         classpath "gradle.plugin.com.github.erdi.webdriver-binaries:webdriver-binaries-gradle-plugin:${webdriverPluginVersion}"
         classpath "com.bertramlabs.plugins:asset-pipeline-gradle:${assetPipelineVersion}"
+        classpath "net.errbuddy.plugins:babel-asset-pipeline:${assetBabelVersion}"
+
     }
 }
 
@@ -93,6 +95,7 @@ subprojects { project ->
                 testImplementation "org.seleniumhq.selenium:selenium-support:${seleniumVersion}"
                 testRuntimeOnly "org.seleniumhq.selenium:selenium-chrome-driver:${seleniumVersion}"
                 testRuntimeOnly "org.seleniumhq.selenium:selenium-firefox-driver:${seleniumVersion}"
+                implementation "net.errbuddy.plugins:babel-asset-pipeline:${assetBabelVersion}"
             } else if ( isGrailsPlugin ) {
                 profile "org.grails.profiles:web-plugin"
             }        
