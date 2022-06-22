@@ -10,6 +10,10 @@ buildscript {
     }
 }
 
+plugins {
+  id "com.github.ben-manes.versions" version "0.42.0"
+}
+
 subprojects { project ->
 	boolean isGrailsApp = project.name.endsWith( '-app' )
 	boolean isGrailsPlugin = project.name.endsWith( '-plugin' )
