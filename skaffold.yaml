@@ -10,6 +10,18 @@ build:
   tagPolicy:
     sha256: {}
 deploy:
-  kubectl:
-    manifests:
-    - apps/omar-foobar-app/k8s/*.yaml
+  # kubectl:
+  #   manifests:
+  #   - apps/omar-foobar-app/k8s/*.yaml
+  helm:
+    releases:
+      - name: omar-foobar
+        recreatePods: true
+        imageStrategy:
+          helm: {}
+        chartPath: chart
+        # valuesFiles:
+        #   - chart/values-dev.yaml
+        namespace: omar-3pa-dev
+        artifactOverrides:
+          image: nexus-docker-private-hosted.ossim.io/omar-foobar  

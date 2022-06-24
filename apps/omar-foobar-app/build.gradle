@@ -25,11 +25,22 @@ jib {
         user = 'omar'
         ports = [ '8080' ]
         creationTime = 'USE_CURRENT_TIMESTAMP'
-        environment = [
-            JAVA_MAIN_CLASS: mainClassName,
-            JAVA_CLASSPATH : '/app/classpath/*:/app/libs/*',
-            JAVA_OPTIONS   : '-server -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom -XshowSettings:vm  -XX:+UseStringDeduplication -XX:+UseShenandoahGC -XX:+ExitOnOutOfMemoryError'
+        // environment = [
+            // JAVA_MAIN_CLASS: mainClassName,
+            // JAVA_CLASSPATH : '/app/classpath/*:/app/libs/*',
+            // JAVA_OPTIONS   : '-server -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom -XshowSettings:vm  -XX:+UseStringDeduplication -XX:+UseShenandoahGC -XX:+ExitOnOutOfMemoryError'
+            // JAVA_OPTS   : '-server -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom -XshowSettings:vm  -XX:+UseStringDeduplication -XX:+UseShenandoahGC -XX:+ExitOnOutOfMemoryError'
+        // ]
+        jvmFlags = [
+            '-server',
+            '-Djava.awt.headless=true',
+            '-Djava.security.egd=file:/dev/./urandom',
+            '-XshowSettings:vm',
+            '-XX:+UseStringDeduplication',
+            '-XX:+UseShenandoahGC',
+            '-XX:+ExitOnOutOfMemoryError'            
         ]
-        entrypoint = [ '/home/omar/run_java.sh' ]
+
+        // entrypoint = [ '/home/omar/run_java.sh' ]
     }
 }

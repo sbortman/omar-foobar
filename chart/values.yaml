@@ -1,0 +1,108 @@
+# Default values for chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+
+# This values file is used to support the 3pa parent chart
+# deployment. Check that chart to modify these values.
+
+fullnameOverride: omar-foobar
+
+global:
+  dockerRepository: nexus-docker-private-group.ossim.io
+  imagePullSecret:
+    registry: null
+    username: null
+    password: null
+  hostname: omar-3pa-dev.ossim.io
+
+  omarDb:
+    name: null
+    host: null
+    user: null
+    password: null
+    port: null
+
+  ingress:
+    class: nginx
+    enabled: true
+    annotations: {}
+
+  useTls: false
+  useTLSClientAuth: false
+  sslCertSecretName: null
+  authSslCertSecretName: null
+
+  createImagePullSecret: false
+  useImagePullSecret: true
+
+  autoscaling:
+    enabled: false
+
+  createPVs: false
+  useSpringConfigServer: false
+
+  deployment:
+    annotations: {}
+
+  serviceAccount:
+    enabled: false
+    annotations: {}
+    # name:
+
+  envVars: {}
+
+envVars: {}
+
+image:
+  name: omar-foobar
+  tag: null
+  pullPolicy: null
+
+ingress:
+  enabled:
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  class: # defaults to nginx if not set
+
+ingressPath: /omar-foobar
+internalPort: 8080
+externalPort: 8080
+
+readinessProbe:
+  path: /actuator/health
+  port: 8080
+  initialDelaySeconds: 5
+  timeoutSeconds: 3
+livenessProbe:
+  path: /actuator/health
+  port: 8080
+  initialDelaySeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 10
+
+resources:
+  limits:
+    cpu: 4
+    memory: 4Gi
+  requests:
+    cpu: 2
+    memory: 2Gi
+
+autoscaling:
+  enabled:
+  targetCpu: 80
+  targetMemory: 70
+
+deployment:
+  annotations: {}
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  enabled: null
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and enabled is true, a name is generated using the fullname template
+  # name:
