@@ -1,0 +1,15 @@
+apiVersion: skaffold/v2beta28
+kind: Config
+metadata:
+  name: omar-foobar
+build:
+  artifacts:
+  - image: nexus-docker-private-hosted.ossim.io/omar-foobar
+    jib: 
+      project: omar-foobar-app
+  tagPolicy:
+    sha256: {}
+deploy:
+  kubectl:
+    manifests:
+    - k8s.yaml

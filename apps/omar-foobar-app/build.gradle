@@ -2,7 +2,6 @@ plugins {
   id 'com.google.cloud.tools.jib' 
 }
 
-
 dependencies {
     implementation project( ":${ rootProject.name }-plugin" )
 }
@@ -22,14 +21,15 @@ jib {
     }
     containerizingMode = 'packaged'
     container {
-        // appRoot = '/home/omar'        
+        // appRoot = '/home/omar/app'        
         user = 'omar'
         ports = [ '8080' ]
         creationTime = 'USE_CURRENT_TIMESTAMP'
-    }
-    extraDirectories {
-        permissions = [
-            '/home/omar': '777'
+        environment = [
+            JAVA_MAIN_CLASS: mainClassName,
+            JAVA_CLASSPATH : '/app/classpath/*:/app/libs/*',
+            JAVA_OPTIONS   : '-server -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom -XX:+PrintFlagsFinal -XX:+UseStringDeduplication -XX:+UseShenandoahGC'
         ]
+        entrypoint = [ '/home/omar/run_java.sh' ]
     }
 }

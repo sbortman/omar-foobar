@@ -42,7 +42,7 @@ environments:
     production:
         management:
             endpoints:
-                enabled-by-default: false
+                enabled-by-default: true
 
 ---
 grails:
