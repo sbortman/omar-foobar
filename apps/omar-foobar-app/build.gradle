@@ -14,11 +14,22 @@ assets {
 
 jib {
     from {
-        image = "eclipse-temurin:11-alpine"
+        image = "${jibFromRepo}/${jibFromImage}:${jibFromVersion}"
     }
     to {
-        image = "${project.name}" 
+        image = "${jibToRepo}/${project.name}" 
         tags = [ 'latest' ]
     }
     containerizingMode = 'packaged'
+    container {
+        // appRoot = '/home/omar'        
+        user = 'omar'
+        ports = [ '8080' ]
+        creationTime = 'USE_CURRENT_TIMESTAMP'
+    }
+    extraDirectories {
+        permissions = [
+            '/home/omar': '777'
+        ]
+    }
 }
