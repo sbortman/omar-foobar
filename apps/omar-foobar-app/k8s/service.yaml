@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "omar-foobar"
+spec:
+  selector:
+    app: "omar-foobar"
+  type: LoadBalancer
+  ports:
+    - protocol: "TCP"
+      port: 8080

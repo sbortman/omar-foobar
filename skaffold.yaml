@@ -12,4 +12,4 @@ build:
 deploy:
   kubectl:
     manifests:
-    - apps/omar-foobar-app/k8s.yaml
+    - apps/omar-foobar-app/k8s/*.yaml

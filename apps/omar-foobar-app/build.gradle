@@ -28,7 +28,7 @@ jib {
         environment = [
             JAVA_MAIN_CLASS: mainClassName,
             JAVA_CLASSPATH : '/app/classpath/*:/app/libs/*',
-            JAVA_OPTIONS   : '-server -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom -XX:+PrintFlagsFinal -XX:+UseStringDeduplication -XX:+UseShenandoahGC'
+            JAVA_OPTIONS   : '-server -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom -XshowSettings:vm  -XX:+UseStringDeduplication -XX:+UseShenandoahGC -XX:+ExitOnOutOfMemoryError'
         ]
         entrypoint = [ '/home/omar/run_java.sh' ]
     }
