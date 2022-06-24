@@ -1,3 +1,8 @@
+plugins {
+  id 'com.google.cloud.tools.jib' 
+}
+
+
 dependencies {
     implementation project( ":${ rootProject.name }-plugin" )
 }
@@ -5,4 +10,15 @@ dependencies {
 assets {
     minifyJs = true
     minifyCss = true
+}
+
+jib {
+    from {
+        image = "eclipse-temurin:11-alpine"
+    }
+    to {
+        image = "${project.name}" 
+        tags = [ 'latest' ]
+    }
+    containerizingMode = 'packaged'
 }

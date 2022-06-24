@@ -8,12 +8,12 @@ buildscript {
         classpath "gradle.plugin.com.github.erdi.webdriver-binaries:webdriver-binaries-gradle-plugin:${webdriverPluginVersion}"
         classpath "com.bertramlabs.plugins:asset-pipeline-gradle:${assetPipelineVersion}"
         classpath "net.errbuddy.plugins:babel-asset-pipeline:${assetBabelVersion}"
-
     }
 }
 
 plugins {
   id "com.github.ben-manes.versions" version "${versionsPluginVersion}"
+  id 'com.google.cloud.tools.jib' version "${jibPluginVersion}" apply false 
 }
 
 subprojects { project ->
