@@ -1,8 +1,28 @@
+plugins {
+    id 'com.google.cloud.tools.jib'
+}
+
 dependencies {
-    implementation project( ":${ rootProject.name }-plugin" )
+    implementation project( ":${rootProject.name}-plugin" )
 }
 
 assets {
     minifyJs = true
     minifyCss = true
+}
+
+jib {
+    from {
+//        image = 'azul/zulu-openjdk-alpine:11.0.18'
+        image = 'docker://ossim-alpine-jdk17-runtime'
+    }
+    to {
+        image = "${project.name}"
+        tags = [ 'latest' ]
+    }
+    containerizingMode = 'packaged'
+    container {
+        creationTime = 'USE_CURRENT_TIMESTAMP'
+        ports = [ '8080' ]
+    }
 }

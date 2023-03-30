@@ -4,13 +4,16 @@
     <meta name="layout" content="main"/>
     <title>Welcome to Grails</title>
 </head>
+
 <body>
 <content tag="nav">
     <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Application Status <span class="caret"></span></a>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+           aria-expanded="false">Application Status <span class="caret"></span></a>
         <ul class="dropdown-menu">
             <li class="dropdown-item"><a href="#">Environment: ${grails.util.Environment.current.name}</a></li>
-            <li class="dropdown-item"><a href="#">App profile: ${grailsApplication.config.grails?.profile}</a></li>
+            <li class="dropdown-item"><a
+                    href="#">App profile: ${grailsApplication.config.getProperty( 'grails.profile' )}</a></li>
             <li class="dropdown-item"><a href="#">App version:
                 <g:meta name="info.app.version"/></a>
             </li>
@@ -19,13 +22,15 @@
                 <g:meta name="info.app.grailsVersion"/></a>
             </li>
             <li class="dropdown-item"><a href="#">Groovy version: ${GroovySystem.getVersion()}</a></li>
-            <li class="dropdown-item"><a href="#">JVM version: ${System.getProperty('java.version')}</a></li>
+            <li class="dropdown-item"><a href="#">JVM version: ${System.getProperty( 'java.version' )}</a></li>
             <li role="separator" class="dropdown-divider"></li>
-            <li class="dropdown-item"><a href="#">Reloading active: ${grails.util.Environment.reloadingAgentEnabled}</a></li>
+            <li class="dropdown-item"><a href="#">Reloading active: ${grails.util.Environment.reloadingAgentEnabled}</a>
+            </li>
         </ul>
     </li>
     <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Artefacts <span class="caret"></span></a>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+           aria-expanded="false">Artefacts <span class="caret"></span></a>
         <ul class="dropdown-menu">
             <li class="dropdown-item"><a href="#">Controllers: ${grailsApplication.controllerClasses.size()}</a></li>
             <li class="dropdown-item"><a href="#">Domains: ${grailsApplication.domainClasses.size()}</a></li>
@@ -34,9 +39,10 @@
         </ul>
     </li>
     <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Installed Plugins <span class="caret"></span></a>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+           aria-expanded="false">Installed Plugins <span class="caret"></span></a>
         <ul class="dropdown-menu dropdown-menu-right">
-            <g:each var="plugin" in="${applicationContext.getBean('pluginManager').allPlugins.sort { it.name }}">
+            <g:each var="plugin" in="${applicationContext.getBean( 'pluginManager' ).allPlugins.sort { it.name }}">
                 <li class="dropdown-item"><a href="#">${plugin.name} - ${plugin.version}</a></li>
             </g:each>
         </ul>
@@ -64,7 +70,7 @@
             <div id="controllers" role="navigation">
                 <h2>Available Controllers:</h2>
                 <ul>
-                    <g:each var="c" in="${grailsApplication.controllerClasses.sort { it.fullName } }">
+                    <g:each var="c" in="${grailsApplication.controllerClasses.sort { it.fullName }}">
                         <li class="controller">
                             <g:link controller="${c.logicalPropertyName}">${c.fullName}</g:link>
                         </li>

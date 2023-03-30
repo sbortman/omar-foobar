@@ -1,154 +1,153 @@
 buildscript {
-    repositories {
-        maven { url "https://repo.grails.org/grails/core" }
-    }
-    dependencies {
-        classpath "org.grails:grails-gradle-plugin:${grailsGradlePluginVersion}"
-        classpath "org.grails.plugins:hibernate5:${hibernate5Version}"
-        classpath "gradle.plugin.com.github.erdi.webdriver-binaries:webdriver-binaries-gradle-plugin:${webdriverPluginVersion}"
-        classpath "com.bertramlabs.plugins:asset-pipeline-gradle:${assetPipelineVersion}"
-        classpath "net.errbuddy.plugins:babel-asset-pipeline:${assetBabelVersion}"
-
-    }
+  repositories {
+    maven { url "https://plugins.gradle.org/m2/" }
+    maven { url "https://repo.grails.org/grails/core" }
+  }
+  dependencies {
+    classpath "org.grails:grails-gradle-plugin:$grailsGradlePluginVersion"
+    classpath "gradle.plugin.com.github.erdi.webdriver-binaries:webdriver-binaries-gradle-plugin:$webdriverPluginVersion"
+    classpath "org.grails.plugins:hibernate5:$hibernate5Version"
+    classpath "com.bertramlabs.plugins:asset-pipeline-gradle:$assetPipelineVersion"
+    classpath "net.errbuddy.plugins:babel-asset-pipeline:$assetBabelVersion"
+  }
 }
 
 plugins {
   id "com.github.ben-manes.versions" version "${versionsPluginVersion}"
+  id 'com.google.cloud.tools.jib' version '3.3.1' apply false
 }
 
 subprojects { project ->
-	boolean isGrailsApp = project.name.endsWith( '-app' )
-	boolean isGrailsPlugin = project.name.endsWith( '-plugin' )
-	boolean isGrailsProject = isGrailsApp || isGrailsPlugin
+  boolean isGrailsApp = project.name.endsWith( '-app' )
+  boolean isGrailsPlugin = project.name.endsWith( '-plugin' )
+  boolean isGrailsProject = isGrailsApp || isGrailsPlugin
 
-    version projectVersion
-    group groupName
-    apply plugin:"eclipse"
-    apply plugin:"idea"
+  version projectVersion
+  group groupName
 
-    if ( isGrailsProject ) {
-        if ( isGrailsApp ) {
-            apply plugin:"org.grails.grails-web"
-            apply plugin:"com.github.erdi.webdriver-binaries"
-            apply plugin:"com.bertramlabs.asset-pipeline"
-        } else if ( isGrailsPlugin ) {
-            apply plugin:"org.grails.grails-plugin"
-            apply plugin:"asset-pipeline"
-        }        
+  apply plugin: "eclipse"
+  apply plugin: "idea"
 
-        apply plugin:"org.grails.grails-gsp"
+  if ( isGrailsProject ) {
+    if ( isGrailsApp ) {
+      apply plugin: "org.grails.grails-web"
+      apply plugin: "com.github.erdi.webdriver-binaries"
+      apply plugin: "com.bertramlabs.asset-pipeline"
+    } else if ( isGrailsPlugin ) {
+      apply plugin: "org.grails.grails-plugin"
+      apply plugin: "asset-pipeline"
+    }
 
-        repositories {
-            mavenLocal()
-            maven { url "https://repo.osgeo.org/repository/release/" }
-            maven { url "https://repo.osgeo.org/repository/snapshot/" }
-            maven { url "https://repo.grails.org/grails/core" }
+    apply plugin: "org.grails.grails-gsp"
+
+    repositories {
+      mavenCentral()
+      maven { url "https://repo.grails.org/grails/core" }
+    }
+
+    configurations {
+      developmentOnly
+      runtimeClasspath {
+        extendsFrom developmentOnly
+      }
+    }
+
+    dependencies {
+      developmentOnly( "org.springframework.boot:spring-boot-devtools" )
+      compileOnly "io.micronaut:micronaut-inject-groovy"
+      console "org.grails:grails-console"
+      implementation "org.springframework.boot:spring-boot-starter-logging"
+      implementation "org.springframework.boot:spring-boot-starter-validation"
+      implementation "org.springframework.boot:spring-boot-autoconfigure"
+      implementation "org.grails:grails-core"
+      implementation "org.springframework.boot:spring-boot-starter-actuator"
+      implementation "org.springframework.boot:spring-boot-starter-tomcat"
+      implementation "org.grails:grails-web-boot"
+      implementation "org.grails:grails-logging"
+      implementation "org.grails:grails-plugin-rest"
+      implementation "org.grails:grails-plugin-databinding"
+      implementation "org.grails:grails-plugin-i18n"
+      implementation "org.grails:grails-plugin-services"
+      implementation "org.grails:grails-plugin-url-mappings"
+      implementation "org.grails:grails-plugin-interceptors"
+      implementation "org.grails.plugins:cache"
+      implementation "org.grails.plugins:async"
+      implementation "org.grails.plugins:scaffolding"
+      implementation "org.grails.plugins:gsp"
+      runtimeOnly "com.bertramlabs.plugins:asset-pipeline-grails:$assetPipelineVersion"
+      testImplementation "io.micronaut:micronaut-inject-groovy"
+      testImplementation "org.grails:grails-gorm-testing-support"
+      testImplementation "org.mockito:mockito-core"
+      testImplementation "org.grails:grails-web-testing-support"
+      implementation "net.errbuddy.plugins:babel-asset-pipeline:${assetBabelVersion}"
+
+      if ( isGrailsApp ) {
+        implementation "org.grails.plugins:hibernate5"
+        implementation "org.hibernate:hibernate-core:$hibernateCoreVersion"
+        implementation "org.grails.plugins:events"
+        profile "org.grails.profiles:web"
+        runtimeOnly "org.glassfish.web:el-impl:$glassfishElVersion"
+        runtimeOnly "com.h2database:h2"
+        runtimeOnly "org.apache.tomcat:tomcat-jdbc"
+        runtimeOnly "javax.xml.bind:jaxb-api:$jaxbApiVersion"
+        testImplementation "org.grails.plugins:geb"
+        testImplementation "org.seleniumhq.selenium:selenium-remote-driver:$seleniumVersion"
+        testImplementation "org.seleniumhq.selenium:selenium-api:$seleniumVersion"
+        testImplementation "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
+        testRuntimeOnly "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
+        testRuntimeOnly "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
+      } else if ( isGrailsPlugin ) {
+        profile "org.grails.profiles:web-plugin"
+      }
+    }
+
+    bootRun {
+      ignoreExitValue true
+      jvmArgs(
+          '-Dspring.output.ansi.enabled=always',
+          '-noverify',
+          '-XX:TieredStopAtLevel=1',
+          '-Xmx1024m' )
+      sourceResources sourceSets.main
+      String springProfilesActive = 'spring.profiles.active'
+      systemProperty springProfilesActive, System.getProperty( springProfilesActive )
+    }
+
+    tasks.withType( GroovyCompile ) {
+      configure( groovyOptions ) {
+        forkOptions.jvmArgs = [ '-Xmx1024m' ]
+      }
+    }
+
+    tasks.withType( Test ) {
+      useJUnitPlatform()
+    }
+
+    if ( isGrailsApp ) {
+      webdriverBinaries {
+        if (!System.getenv().containsKey('GITHUB_ACTIONS')) {
+          chromedriver {
+            version = webdriverChromeVersion
+            fallbackTo32Bit = true
+          }
+          geckodriver webdriverGeckoVersion
         }
+      }
 
-        configurations {
-            developmentOnly
-            runtimeClasspath {
-                extendsFrom developmentOnly
-            }
+      tasks.withType(Test) {
+        systemProperty "geb.env", System.getProperty('geb.env')
+        systemProperty "geb.build.reportsDir", reporting.file("geb/integrationTest")
+        if (!System.getenv().containsKey('GITHUB_ACTIONS')) {
+          systemProperty 'webdriver.chrome.driver', System.getProperty('webdriver.chrome.driver')
+          systemProperty 'webdriver.gecko.driver', System.getProperty('webdriver.gecko.driver')
+        } else {
+          systemProperty 'webdriver.chrome.driver', "${System.getenv('CHROMEWEBDRIVER')}/chromedriver"
+          systemProperty 'webdriver.gecko.driver', "${System.getenv('GECKOWEBDRIVER')}/geckodriver"
         }
-
-        dependencies {
-            developmentOnly("org.springframework.boot:spring-boot-devtools")
-            compileOnly "io.micronaut:micronaut-inject-groovy"
-            console "org.grails:grails-console"
-            implementation "org.springframework.boot:spring-boot-starter-logging"
-            implementation "org.springframework.boot:spring-boot-starter-validation"
-            implementation "org.springframework.boot:spring-boot-autoconfigure"
-            implementation "org.grails:grails-core"
-            implementation "org.springframework.boot:spring-boot-starter-actuator"
-            implementation "org.springframework.boot:spring-boot-starter-tomcat"
-            implementation "org.grails:grails-web-boot"
-            implementation "org.grails:grails-logging"
-            implementation "org.grails:grails-plugin-rest"
-            implementation "org.grails:grails-plugin-databinding"
-            implementation "org.grails:grails-plugin-i18n"
-            implementation "org.grails:grails-plugin-services"
-            implementation "org.grails:grails-plugin-url-mappings"
-            implementation "org.grails:grails-plugin-interceptors"
-            implementation "org.grails.plugins:cache"
-            implementation "org.grails.plugins:async"
-            implementation "org.grails.plugins:scaffolding"
-            implementation "org.grails.plugins:gsp"
-            runtimeOnly "com.bertramlabs.plugins:asset-pipeline-grails:${assetPipelineVersion}"
-            testImplementation "io.micronaut:micronaut-inject-groovy"
-            testImplementation "org.grails:grails-gorm-testing-support"
-            testImplementation "org.mockito:mockito-core"
-            testImplementation "org.grails:grails-web-testing-support"
-
-            if ( isGrailsApp ) {
-                implementation "org.grails.plugins:hibernate5"
-                implementation "org.hibernate:hibernate-core:${hibernateCoreVersion}"
-                implementation "org.grails.plugins:events"
-                profile "org.grails.profiles:web"
-                runtimeOnly "org.glassfish.web:el-impl:${glassfishElVersion}"
-                runtimeOnly "com.h2database:h2"
-                runtimeOnly "org.apache.tomcat:tomcat-jdbc"
-                runtimeOnly "javax.xml.bind:jaxb-api:${jaxbApiVersion}"
-                testImplementation "org.grails.plugins:geb"
-                testImplementation "org.seleniumhq.selenium:selenium-remote-driver:${seleniumVersion}"
-                testImplementation "org.seleniumhq.selenium:selenium-api:${seleniumVersion}"
-                testImplementation "org.seleniumhq.selenium:selenium-support:${seleniumVersion}"
-                testRuntimeOnly "org.seleniumhq.selenium:selenium-chrome-driver:${seleniumVersion}"
-                testRuntimeOnly "org.seleniumhq.selenium:selenium-firefox-driver:${seleniumVersion}"
-                implementation "net.errbuddy.plugins:babel-asset-pipeline:${assetBabelVersion}"
-            } else if ( isGrailsPlugin ) {
-                profile "org.grails.profiles:web-plugin"
-            }        
-        }
-
-        bootRun {
-            ignoreExitValue true
-            jvmArgs(
-                '-Dspring.output.ansi.enabled=always', 
-                '-noverify', 
-                '-XX:TieredStopAtLevel=1',
-                '-Xmx1024m')
-            sourceResources sourceSets.main
-            String springProfilesActive = 'spring.profiles.active'
-            systemProperty springProfilesActive, System.getProperty(springProfilesActive)
-        }
-
-        tasks.withType(GroovyCompile) {
-            configure(groovyOptions) {
-                forkOptions.jvmArgs = ['-Xmx1024m']
-            }
-        }
-
-        tasks.withType(Test) {
-            useJUnitPlatform()
-        }
-
-
-        if ( isGrailsApp ) {
-            webdriverBinaries {
-                if (!System.getenv().containsKey('GITHUB_ACTIONS')) {
-                    chromedriver {
-                        version = webdriverChromeVersion
-                        fallbackTo32Bit = true
-                    }
-                    geckodriver webdriverGeckoVersion
-                }
-            }
-
-            tasks.withType(Test) {
-                systemProperty "geb.env", System.getProperty('geb.env')
-                systemProperty "geb.build.reportsDir", reporting.file("geb/integrationTest")
-                if (!System.getenv().containsKey('GITHUB_ACTIONS')) {
-                    systemProperty 'webdriver.chrome.driver', System.getProperty('webdriver.chrome.driver')
-                    systemProperty 'webdriver.gecko.driver', System.getProperty('webdriver.gecko.driver')
-                } else {
-                    systemProperty 'webdriver.chrome.driver', "${System.getenv('CHROMEWEBDRIVER')}/chromedriver"
-                    systemProperty 'webdriver.gecko.driver', "${System.getenv('GECKOWEBDRIVER')}/geckodriver"
-                }
-            }
-        } else if ( isGrailsPlugin ) {
-            // enable if you wish to package this plugin as a standalone application
-            bootJar.enabled = false
-        }        
-    }    
+      }
+    } else if ( isGrailsPlugin ) {
+      // enable if you wish to package this plugin as a standalone application
+      bootJar.enabled = false
+    }
+  }
 }

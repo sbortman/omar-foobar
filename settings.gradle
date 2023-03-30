@@ -18,4 +18,4 @@ if ( System.getenv( 'O2_INLINE_BUILD' ) ) {
     modules?.each { module ->
         includeBuild  "${rootProject.projectDir.parent}/${module}"
     }
-}    
+}
