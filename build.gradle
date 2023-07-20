@@ -41,6 +41,8 @@ subprojects { project ->
     apply plugin: "org.grails.grails-gsp"
 
     repositories {
+      mavenLocal()
+      maven { url 'https://repo.osgeo.org/repository/release/' }
       mavenCentral()
       maven { url "https://repo.grails.org/grails/core" }
     }
